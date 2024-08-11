@@ -4,7 +4,13 @@
 -Configured TailwindCSS
 -Header
 -Login Form
+-Routing of App
 -Sign up Form
+-Form Validation
+-useRef Hook
+-Firebase setup
+-Deploying our App to production
+-Create Signup user account
 
 # Features:
 
