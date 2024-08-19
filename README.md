@@ -11,6 +11,15 @@
 -Firebase setup
 -Deploying our App to production
 -Create Signup user account
+-Implement Sign in user API
+-Created Redux Store with UserSlice
+-Implemented Sign out
+-Update Profile
+-Fetch from TMDB Movies
+-BugFix: Sign up user displayName & profile picture update
+-BugFix:If the user is not logged in Redirect/browse to Login Page & vice-versa
+-Unsubscribe to the onAuthstatechanged callback function
+-Add hardcoded values to the constant file
 
 # Features:
 

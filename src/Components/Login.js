@@ -1,21 +1,23 @@
 import { useState , useRef } from "react";
 import Header from "./Header";
 import { checkValidData } from "./utils/validate.js";
-import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword } from "firebase/auth";
+import { createUserWithEmailAndPassword, signInWithEmailAndPassword, updateProfile } from "firebase/auth";
 import { auth } from "./utils/firebase.js";
+import { useDispatch } from "react-redux";
+import { addUser } from "./utils/userSlice.js";
+import {USER_AVATAR} from "./utils/constants.js";
 
 
 const Login = () => {
     const [isSignInForm, setIsSignInForm] = useState(true);
     const [errorMessage,setErrorMessage] = useState (true);
+    const dispatch = useDispatch();
     
-    
+    const name = useRef(null);
     const email= useRef(null);
     const password = useRef(null);
 
-    const toggleSignInForm = () => {
-     setIsSignInForm(!isSignInForm);
-    };
+    
 
     const handleButtonClick = () => {
     const message= checkValidData(email.current.value, password.current.value);
@@ -31,32 +33,60 @@ const Login = () => {
         .then((userCredential) => {
     // Signed up
     const user = userCredential.user;
-    console.log(user);
-    // ...
+    updateProfile(user, {
+      displayName: name.current.value,
+      photoURL: USER_AVATAR,
+    })
+    .then(() => {
+      const { uid, email, displayName, photoURL } = auth.currentUser;
+      dispatch(
+        addUser({
+          uid:uid,
+          email:email,
+          displayName: displayName,
+          photoURL:photoURL,
+        })
+      );
+       
+    })
+    .catch((error) => {
+      setErrorMessage(error.message);
+      //...
+    });
   })
+  
   .catch((error) => {
     const errorCode = error.code;
     const errorMessage = error.message;
     setErrorMessage(errorCode + "-" + errorMessage);
-    // ..
+    
   });
-    }
+
+}
+    
     else {
       //SignIn Logic
-      const auth = getAuth();
-      signInWithEmailAndPassword(auth, email.current.value, password.current.value)
+      
+      signInWithEmailAndPassword(
+        auth,
+        email.current.value,
+        password.current.value)
       .then((userCredential) => {
     // Signed up 
-    const user = userCredential.user;
-    console.log(user);
-    // ...
-  })
+       const user = userCredential.user;
+      })
+    
+    
+  
   .catch((error) => {
     const errorCode = error.code;
     const errorMessage = error.message;
     setErrorMessage(errorCode + "-" + errorMessage);
   });
     }
+    };
+    const toggleSignInForm = () => {
+      setIsSignInForm(!isSignInForm);
     };
     return( 
      <div>
